@@ -78,6 +78,21 @@ namespace Grocery.App.ViewModels
             //Werk de voorraad (Stock) van het product bij en zorg dat deze wordt vastgelegd (middels _productService)
             //Werk de lijst AvailableProducts bij, want dit product is niet meer beschikbaar
             //call OnGroceryListChanged(GroceryList);
+
+            if(product == null || product.Id < 0)
+            {
+                return;
+            }
+
+            GroceryListItem groceryListItem = new GroceryListItem(0, GroceryList.Id, product.Id, 1);
+
+            _groceryListItemsService.Add(groceryListItem);
+
+            product.Stock--;
+
+            AvailableProducts.Remove(product);
+
+            OnGroceryListChanged(GroceryList);
         }
     }
 }
