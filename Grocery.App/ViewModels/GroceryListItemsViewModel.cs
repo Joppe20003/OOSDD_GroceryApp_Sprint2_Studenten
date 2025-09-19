@@ -37,7 +37,25 @@ namespace Grocery.App.ViewModels
             //Maak de lijst AvailableProducts leeg
             //Haal de lijst met producten op
             //Controleer of het product al op de boodschappenlijst staat, zo niet zet het in de AvailableProducts lijst
-            //Houdt rekening met de voorraad (als die nul is kun je het niet meer aanbieden).            
+            //Houdt rekening met de voorraad (als die nul is kun je het niet meer aanbieden).
+
+            //AvailableProducts.Clear();
+
+            //List<Product> producten = _productService.GetAll();
+
+            AvailableProducts.Clear();
+
+            List<Product> producten = _productService.GetAll();
+
+            foreach (Product product in producten)
+            {
+                bool bestaat = MyGroceryListItems.Any(item => item.ProductId == product.Id);
+
+                if (!bestaat && product.Stock > 0)
+                {
+                    AvailableProducts.Add(product);
+                }
+            }
         }
 
         partial void OnGroceryListChanged(GroceryList value)
@@ -60,6 +78,21 @@ namespace Grocery.App.ViewModels
             //Werk de voorraad (Stock) van het product bij en zorg dat deze wordt vastgelegd (middels _productService)
             //Werk de lijst AvailableProducts bij, want dit product is niet meer beschikbaar
             //call OnGroceryListChanged(GroceryList);
+
+            if(product == null || product.Id < 0)
+            {
+                return;
+            }
+
+            GroceryListItem groceryListItem = new GroceryListItem(0, GroceryList.Id, product.Id, 1);
+
+            _groceryListItemsService.Add(groceryListItem);
+
+            product.Stock--;
+
+            AvailableProducts.Remove(product);
+
+            OnGroceryListChanged(GroceryList);
         }
     }
 }
