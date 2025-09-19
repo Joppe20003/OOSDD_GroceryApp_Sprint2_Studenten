@@ -79,7 +79,7 @@ namespace Grocery.App.ViewModels
             //Werk de lijst AvailableProducts bij, want dit product is niet meer beschikbaar
             //call OnGroceryListChanged(GroceryList);
 
-            if(product == null || product.Id < 0)
+            if (product == null || product.Id < 0)
             {
                 return;
             }
@@ -89,6 +89,8 @@ namespace Grocery.App.ViewModels
             _groceryListItemsService.Add(groceryListItem);
 
             product.Stock--;
+
+            _productService.Update(product);
 
             AvailableProducts.Remove(product);
 
